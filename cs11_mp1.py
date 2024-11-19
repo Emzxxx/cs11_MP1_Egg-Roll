@@ -22,25 +22,25 @@ Current Status:
         - Repeats main menu call if invalid input
     - Can Clear Screen
     - Allow time delays 
-    - Movement is kind of being developed already
-        - Movement relation to main file/game still needs to be fixed
+    - Movement is done and has been implemented already
 
 TODO:
-    - Make the actual movement for the UI (pain)
-        - Simultaneous Movement of all eggs
-        - Egg interactions
-            - Going into nests
-            - Bumping into each other/walls
-            - Fried
-            - Horizontal and Vertical movement
-    - Maybe make separate files for game tech for a cleaner main file?
+    - Points system
+    - Count how many eggs there still are
+        - So when there are 0 eggs, the game ends
+    - Make separate files for game tech for a cleaner main file.
     - Make _test versions of functions
     - Add more detailed docs
-    - Make README file
-
-
+    - Properly make the text/non-game files 
+        - README file
+        - Rules
+        - Developer
+        - Leaderboard (If we do this)
+        - etc. 
     - Add features for plus points
 '''
+
+
 
 def get_rules(): #For Style
     with open('rules.txt', encoding = 'utf-8') as f:
