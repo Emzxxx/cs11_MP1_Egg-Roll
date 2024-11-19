@@ -45,27 +45,7 @@ def movement(grid, direction):
         move_down(grid)
 
 '''
-It works, move up once function moves up once
-    it however, in its current state edits the entire array
-
-move up function is having a hard time consolidating the end condition due to the 
-fact that everytime it calls move up once, the whole array changes and we dont have a
-basis or something to compare it to to see if it changed or not
-since:
-    If the changed array is the same as the original arrya, that means it can no longer
-    move anywhere so it has to stop
-I just need to find a way to make a stopping condition
-
-My current ideas:
-    1. Make move up create a second array(change_array) which will be sent in
-    move up once. Compare new and old array (I think I prefer this one)
-    2. find the farthest away egg ang repeat around that many
-    times it needs to be highest (IMHO a pretty sketchy solution)
-
-
-Notes:
-    - The printing of the grids are kindof all over the place so we have to fix
-    that pa
+up down are fine na, left right still a bit scuffed in the extra_actions() function
 '''
 
 
