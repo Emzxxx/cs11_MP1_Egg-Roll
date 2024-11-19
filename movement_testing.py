@@ -11,7 +11,7 @@ def print_grid(grid): #For Game Req
 def clear_screen(): #For Game Req
     if sys.stdout.isatty():
         clear_cmd = 'cls' if os.name == 'nt' else 'clear'
-        subprocess.run([clear_cmd])
+        os.system(clear_cmd)
 
 
 
@@ -25,11 +25,11 @@ full_nest = '\U0001FABA'
 temp_grid = [
     '🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱',
     '🧱🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩🧱',
-    '🧱🟩🟩🟩🍳🪹🥚🟩🟩🟩🟩🧱',
+    '🧱🟩🍳🟩🟩🪹🥚🟩🟩🟩🟩🧱',
     '🧱🟩🟩🟩🟩🟩🟩🟩🍳🟩🟩🧱',
     '🧱🟩🟩🟩🟩🥚🪹🟩🟩🥚🥚🧱',
     '🧱🥚🥚🟩🥚🟩🟩🟩🥚🟩🟩🧱',
-    '🧱🟩🟩🟩🥚🍳🟩🟩🟩🟩🟩🧱',
+    '🧱🟩🟩🟩🥚🍳🟩🟩🪹🟩🟩🧱',
     '🧱🟩🟩🟩🟩🟩🥚🥚🟩🟩🟩🧱',
     '🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱🧱'
 ]
@@ -43,11 +43,6 @@ def movement(grid, direction):
         move_up(grid)
     elif direction.lower() == 'b':
         move_down(grid)
-
-'''
-up down are fine na, left right still a bit scuffed in the extra_actions() function
-'''
-
 
 
 def move_up(grid): #needs optimization, separate printing and mutating grid i think
@@ -129,7 +124,7 @@ def move_up_once(grid):
 
                 #If the next thing is a Pan
                 else:
-                    movement_specialAction(grid, row, column, grid[row-1][column])
+                    movement_specialAction(grid, row, column, grid[row-1][column], "vertical")
     return grid
 
 def move_down_once(grid):
@@ -157,7 +152,7 @@ def move_left_once(grid):
                     currrow[column-1] = egg
                     grid[row] = "".join(currrow)
                 else:
-                    movement_specialAction(grid, row, column, grid[row][column-1])
+                    movement_specialAction(grid, row, column, grid[row][column-1], "left")
                     
 def move_right_once(grid):
     for column in range(len(grid[0])-2, 0, -1):
@@ -173,27 +168,54 @@ def move_right_once(grid):
                     currrow[column+1] = egg
                     grid[row] = "".join(currrow)
                 else:
-                    movement_specialAction(grid, row, column, grid[row][column+1])
+                    movement_specialAction(grid, row, column, grid[row][column+1], "right")
 
 
-def movement_specialAction(grid, row, column, next_tile):
+def movement_specialAction(grid, row, column, next_tile, movement_type):
     #Accepts the current tile (egg tile) and accepts the next tile that isnt grass (empty/full nest and pan)
-    row_curr = list(grid[row])
-    #In this case it means the row above the current row
-    row_next = list(grid[row-1])
+    
+    if movement_type == "vertical":
+        #If the movement is in a vertical(upwards/downwards motion)
 
-    if next_tile == pan:
-        row_curr[column] = grass #New tile of the current tile index
-        row_next[column] = pan #New tile of the next tile index
-    elif next_tile == empty_nest:
-        row_curr[column] = grass #New tile of the current tile index
-        row_next[column] = full_nest #New tile of the next tile index
-    elif next_tile == full_nest:
-        row_curr[column] = egg #New tile of the current tile index
-        row_next[column] = full_nest #New tile of the next tile index
+        row_curr = list(grid[row])
+        #Gets the next row from the current, in this case it means the row above the current row for both upwards and downwards motion
+        row_next = list(grid[row-1])
 
-    grid[row] = "".join(row_curr)
-    grid[row-1] = "".join(row_next)
+        if next_tile == pan:
+            row_curr[column] = grass #New tile of the current tile index
+            row_next[column] = pan #New tile of the next tile index
+        elif next_tile == empty_nest:
+            row_curr[column] = grass #New tile of the current tile index
+            row_next[column] = full_nest #New tile of the next tile index
+        elif next_tile == full_nest:
+            row_curr[column] = egg #New tile of the current tile index
+            row_next[column] = full_nest #New tile of the next tile index
+
+        grid[row] = "".join(row_curr)
+        grid[row-1] = "".join(row_next)
+
+    elif movement_type == "left" or movement_type == "right":
+        #If the movement is in a horizontal(right/left motion)
+        if movement_type == "left":
+            movement = -1
+        if movement_type == "right":
+            movement = 1
+
+        #Gets the row of interest
+        row_curr = list(grid[row])
+
+        if next_tile == pan:
+            row_curr[column] = grass #New tile of the current tile index
+            row_curr[column+movement] = pan #New tile of the next tile index
+        elif next_tile == empty_nest:
+            row_curr[column] = grass #New tile of the current tile index
+            row_curr[column+movement] = full_nest #New tile of the next tile index
+        elif next_tile == full_nest:
+            row_curr[column] = egg #New tile of the current tile index
+            row_curr[column+movement] = full_nest #New tile of the next tile index
+
+        grid[row] = "".join(row_curr)
+
 
 
 
@@ -201,3 +223,4 @@ move_up(temp_grid)
 move_down(temp_grid)
 move_left(temp_grid)
 move_right(temp_grid)
+move_up(temp_grid)
